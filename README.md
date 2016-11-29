@@ -1,4 +1,21 @@
-# javaFtp
+﻿# javaFtp
+
+We need:
+
+Sender
+Chunking the file-to-send in 1kb-1mb pieces. 
+Use sha-1 checksum to verify integrity
+Get chunk/hash and encrypt with XOR cipher
+Ascii armoring with MIME Base64 encoding before sending
+Send again if a transmission fails (at least 3 times)
+Notify of termination
+
+Receiver
+Authentication of name/password. Stored.
+If transmission fails, notify sender to send again.
+Save data chunks on success.
+Notify of completion and termination
+Terminate connection
 
 Features - Sender	
 
