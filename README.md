@@ -2,14 +2,14 @@
 
 Features - Sender	
 
-  · Sender must authenticate with receiver via user name and password (user names and passwords can be stored on receiver in the clear, but not hard coded). EC if salted hashes are used.
-	· Program will need to read a file to send chunks, An amount of data bytes, at a time. You may decide the size of the chunks, within 1Kb-1MB.
-	· The chunk is then check-summed/hashed for integrity.
-	· Then, the chunk and associated hash are encrypted using simple XOR cipher.
-	· If ASCII armoring is requested, data is MIME Base64 encoded prior to transmission
-	· If notified by receiver of a failed transmission, try again up to N times (at least 3).
-	· If notified that receiver is terminating connection, sender must do so as well.
-  
+  · Sender must authenticate with receiver via user name and password (user names and passwords can be stored on receiver in the clear, but not hard coded). EC if salted hashes are used.	
+· Program will need to read a file to send chunks, An amount of data bytes, at a time. You may decide the size of the chunks, within 1Kb-1MB.	
+· The chunk is then check-summed/hashed for integrity.	
+· Then, the chunk and associated hash are encrypted using simple XOR cipher.	
+· If ASCII armoring is requested, data is MIME Base64 encoded prior to transmission	
+· If notified by receiver of a failed transmission, try again up to N times (at least 3).	
+· If notified that receiver is terminating connection, sender must do so as well.
+  
 Features - Receiver
 
 	· Sender must authenticate via user name and password stored on the receiver. Plain text storage is acceptable, but extra points are possible if Salted/Hashed passwords (Method of storing passwords to prevent easy cracking/guessing) are used.
