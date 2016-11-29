@@ -1,3 +1,5 @@
+package cs380;
+
 import java.io.Serializable;
 
 /**

@@ -3,6 +3,8 @@ package cs380;
 public class XOR 
 {
 	
+	private static sha test;
+	
 	private static StringBuilder xorMessage(String in) 
 	{
 		
@@ -22,6 +24,9 @@ public class XOR
 		System.out.println(original);
 		String decrypted = XOR.xorMessage(original).toString();
 		System.out.println(decrypted);
+		
+		test = new sha(original);
+		//System.out.println(test.hash);
 		
 	}
 }

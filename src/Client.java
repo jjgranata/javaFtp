@@ -1,3 +1,5 @@
+package cs380;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -6,9 +8,9 @@ public class Client {
     private Socket socket = null;
     private ObjectOutputStream os = null;
     private boolean isConnected = false;
-    private String source = "E:/temp/test.txt"; //change the source file path
+    private String source = "src/cs380/"; //change the source file path
     private FileEvent fileEvent = null;
-    private String destination = "C:/downloads/"; //change the destination path
+    private String destination = "src/cs380/"; //change the destination path
 
     public Client() {
 
@@ -34,13 +36,16 @@ public class Client {
      */
     public void send() {
 
-        fileEvent = new FileEvent();
-        String name = source.substring(source.lastIndexOf("/") + 1, source.length());
-        String path = source.substring(0, source.lastIndexOf("/") + 1);
-        fileEvent.setDestFolder(destination);
-        fileEvent.setFilename(name);
-        fileEvent.setSrcFolder(source);
-        File file = new File(source);
+    	  fileEvent = new FileEvent();
+          //String name = source.substring(source.lastIndexOf("/") + 1, source.length());
+    	  String name = "mp4ToOverwrite.mp4";
+    	  //String name = "filetotest.txt";
+          //String path = source.substring(0, source.lastIndexOf("/") + 1);
+    	  fileEvent.setDestFolder(destination);
+    	  fileEvent.setFilename(name);
+    	  fileEvent.setSrcFolder(source);
+    	  //File file = new File("src/cs380/file2send.txt");
+    	  File file = new File("src/cs380/mp4ToCopy.mp4");
 
         if (file.isFile()) {
 

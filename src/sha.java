@@ -8,13 +8,14 @@ public class sha {
  
     JFileChooser jfc = new JFileChooser("c:");
     File OpenFile = new File("");
+    String hash;
     int j, temp;
     int A, B, C, D, E;
     int[] H = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
     int F;
  
-    public sha() {
-    	perform();
+    public sha(String in) {
+    	hash = perform(in);
     }
  
     public class Digest {
@@ -215,20 +216,21 @@ public class sha {
         return ZEROS.substring(s.length()) + s;
     }
  
-    public void perform() {
+    public String perform(String in) {
         Digest digester = new Digest();
-            try {
-                String z = "MESSAGE TO HASH";
+        //    try {
+                String z = in;
                 System.out.println("Message: " + z);
                 byte[] dataBuffer = (z).getBytes();
                 String thedigest = digester.digestIt(dataBuffer);
                 System.out.println("Output: " + thedigest);
-            } catch (Exception ex) {
-            }
+                return thedigest;
+         //   } catch (Exception ex) {
+         //   }
        
     }
  
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
         sha NgL = new sha();
-    }
+    }*/
 }

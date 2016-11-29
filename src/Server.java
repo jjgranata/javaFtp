@@ -1,3 +1,5 @@
+package cs380;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -59,6 +61,9 @@ public class Server {
             }
 
             dstFile = new File(outputFile);
+            if(dstFile.isFile()){
+            	System.out.println("File is good.");
+            }
             fileOutputStream = new FileOutputStream(dstFile);
             fileOutputStream.write(fileEvent.getData());
             fileOutputStream.flush();
