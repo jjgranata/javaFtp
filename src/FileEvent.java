@@ -1,5 +1,9 @@
 import java.io.Serializable;
 
+/**
+ * File must be present on both the client and server ends; might need to put this in a package and call it.
+ */
+
 public class FileEvent implements Serializable {
 
     public FileEvent() {
