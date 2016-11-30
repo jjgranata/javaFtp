@@ -2,15 +2,21 @@ package cs380;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client {
 
     private Socket socket = null;
     private ObjectOutputStream os = null;
+    //private DataInputStream inputStream = null;
     private boolean isConnected = false;
     private String source = "src/cs380/"; //change the source file path
     private FileEvent fileEvent = null;
     private String destination = "src/cs380/"; //change the destination path
+    
 
     public Client() {
 
@@ -22,84 +28,89 @@ public class Client {
     public void connections() {
         while (!isConnected) {
             try {
-                socket = new Socket("localHost", 4445);
+            	
+                socket = new Socket("localHost", 4454);
+                //inputStream = new ObjectInputStream(socket.getInputStream());
+
                 os = new ObjectOutputStream(socket.getOutputStream());
+                //inputStream = new DataInputStream(socket.getInputStream());
+                
+            
                 isConnected = true;
+                File file = new File("src/cs380/mp4file.mp4");
+                File file2 = new File("src/cs380/newmergedmp4.mp4");
+                splitFile(file);
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    /**
-     * Sending FileEvent
-     */
-    public void send() {
+   
+    
+    public List<File> splitFile(File f) throws IOException {
+    	List<File> files = new ArrayList<File>();
+    	
+        int partCounter = 1;//I like to name parts from 001, 002, 003, ...
+                            //you can change it to 0 if you want 000, 001, ...
 
-    	  fileEvent = new FileEvent();
-          //String name = source.substring(source.lastIndexOf("/") + 1, source.length());
-    	  String name = "mp4ToOverwrite.mp4";
-    	  //String name = "filetotest.txt";
-          //String path = source.substring(0, source.lastIndexOf("/") + 1);
-    	  fileEvent.setDestFolder(destination);
-    	  fileEvent.setFilename(name);
-    	  fileEvent.setSrcFolder(source);
-    	  //File file = new File("src/cs380/file2send.txt");
-    	  File file = new File("src/cs380/mp4ToCopy.mp4");
+        int sizeOfFiles = 1024 * 1024;// 1MB
+        byte[] buffer = new byte[sizeOfFiles];
 
-        if (file.isFile()) {
-
-            try {
-
-                DataInputStream dataStreams = new DataInputStream(new FileInputStream(file));
-                long len = (int) file.length();
-                byte[] fileBytes = new byte[(int) len];
-                int read = 0;
-                int numRead = 0;
-                while (read < fileBytes.length && (numRead = dataStreams.read(fileBytes, read, fileBytes.length - read)) >= 0) {
-                    read = read + numRead;
-
+        try (BufferedInputStream bis = new BufferedInputStream(
+                new FileInputStream(f))) {//try-with-resources to ensure closing stream
+            String name = f.getName();
+            
+            
+            int tmp = 0;
+            while ((tmp = bis.read(buffer)) > 0) {
+                //write each chunk of data into separate file with different number in name
+                //File newFile = new File(f.getParent(), name + "."
+                //        + String.format("%03d", partCounter++));
+                //files.add(newFile);
+            	
+            	System.out.println(tmp);
+            	for(int i = 0; i < 10; i ++)
+            	{
+            		System.out.print(buffer[i] + " ");
+            	}
+            	fileEvent = new FileEvent();
+                fileEvent.setSize(tmp);
+                fileEvent.setData(buffer);
+                fileEvent.setFilename(name + "."
+                        + String.format("%03d", partCounter++));
+                fileEvent.setDestFolder(destination);
+                os.writeObject(fileEvent);
+                os.flush();
+                try {
+                    Thread.sleep(500);
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
                 }
-                fileEvent.setSize(len);
-                fileEvent.setData(fileBytes);
-                fileEvent.setState("Success");
-
-            } catch (Exception e) {
-
-                e.printStackTrace();
-                fileEvent.setState("Error");
-
+            	
+                //os.writeBoolean(true);
+                //try (FileOutputStream out = new FileOutputStream(newFile)) {
+                //    out.write(buffer, 0, tmp);//tmp is chunk size
+                //}
             }
+            os.writeBoolean(false);
+        }catch (Exception e) {
 
-        } else {
-            System.out.println("incorrect path");
+            e.printStackTrace();
             fileEvent.setState("Error");
 
         }
-
-        try {
-
-            os.writeObject(fileEvent);
-            System.out.println("Done; exiting");
-            Thread.sleep(3000);
-            System.exit(0);
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        } catch (InterruptedException e) {
-
-            e.printStackTrace();
-        }
-
+        return files;
     }
+    
+
 
     public static void main(String[] args) {
 
         Client c = new Client();
         c.connections();
-        c.send();
+        //c.send();
 
     }
 
