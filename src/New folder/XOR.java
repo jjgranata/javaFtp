@@ -3,12 +3,13 @@ package cs380;
 public class XOR 
 {
 	
-	private static sha test;
-	
-	private static StringBuilder xorMessage(String in) 
+	public static String xorMessage(String in, String keyString) 
 	{
-		
-		char[] key = {'A'};
+		char[] key = new char[keyString.length()];
+		for(int i = 0; i < keyString.length(); i++)
+		{
+			key[i] = keyString.charAt(i);
+		}
 		
 		StringBuilder out = new StringBuilder();
 		
@@ -16,17 +17,9 @@ public class XOR
 			out.append((char) (in.charAt(i) ^ key[i % key.length]));
 		}
  		
-		return out;
+		return out.toString();
 	}
 	
 	public static void main(String[] args) {
-		String original = XOR.xorMessage("MessageToEncrypt").toString();
-		System.out.println(original);
-		String decrypted = XOR.xorMessage(original).toString();
-		System.out.println(decrypted);
-		
-		test = new sha(original);
-		//System.out.println(test.hash);
-		
 	}
 }

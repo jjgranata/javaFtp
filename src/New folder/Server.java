@@ -2,6 +2,7 @@ package cs380;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class Server {
@@ -23,10 +25,12 @@ public class Server {
     private File dstFile = null;
     private FileOutputStream fileOutputStream = null;
     private List<File> files = new ArrayList<File>();
-   
+    private static sha hash;
+    private static XOR cipher;
 
     public Server() {
-
+    	hash = new sha();
+    	cipher = new XOR();
     }
 
     /**
@@ -36,15 +40,22 @@ public class Server {
 
         try {
 
-            serverSocket = new ServerSocket(4449);
+            serverSocket = new ServerSocket(4456);
             socket = serverSocket.accept();
             //os = new ObjectOutputStream(socket.getOutputStream());
             
             inputStream = new ObjectInputStream(socket.getInputStream());
+
+            String key = "";
+        	Scanner s1 = new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/key.txt"));
+        	while(s1.hasNext())
+        	{
+        		key = s1.next();
+        	}
             
             while(true)
             {
-            	handle();
+            	handle(key);
             }
 
         } catch (IOException e) {
@@ -56,99 +67,45 @@ public class Server {
 
     }
 
-    /**
-     * Reading the FileEvent object and copying
-     */
-   /* public void dLoad() {
-
-        try {
-
-        	
-        	boolean shouldWrite = true;
-        	os.writeBoolean(true);
-        	while(shouldWrite)
-        	{
-                if(inputStream.readBoolean())
-                {
-                	os.writeBoolean(false);
-                	fileEvent = (FileEvent) inputStream.readObject();
-                    String outputFile = fileEvent.getDestFolder() + fileEvent.getFilename();
-                    
-                	dstFile = new File(outputFile);
-                	if(fileOutputStream == null)
-                	{
-                		if(dstFile.isFile()){
-                			System.out.println("File is good.");
-                		}
-                		else {
-                			System.out.println("Creating new file...");
-                			fileOutputStream = new FileOutputStream(fileEvent.getFilename());
-                		}
-                	} 
-                	fileOutputStream.write(fileEvent.getData());
-                	System.out.println("Received...Waiting.");
-                	os.writeBoolean(true);
-                }
-                if(inputStream.readInt() == 3)
-                {
-                	shouldWrite = false;
-                	fileOutputStream.flush();
-                	fileOutputStream.close();
-                	System.out.println("file is saved");
-                	Thread.sleep(3000);
-                	System.exit(0);
-                }
-        	}
-
-        
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        } catch (ClassNotFoundException e) {
-
-            e.printStackTrace();
-
-        } catch (InterruptedException e) {
-
-            e.printStackTrace();
-
-        }
-    }*/
     
-    public void handle()
+    public void handle(String key)
     {
     	try {
 
     				
                 	FileEvent fileEvent = (FileEvent) inputStream.readObject();
-                	byte[] buf = new byte[(int)fileEvent.getSize()];
-                	buf = fileEvent.fileData;
-                	if(fileEvent != null)
+                	
+                	String inHash = cipher.xorMessage(fileEvent.getHash(), key);
+                	String ourHash = hash.perform(fileEvent.getnewData());
+                	System.out.println(inHash);
+                	System.out.println(ourHash);
+                	
+                	if(inHash.equals(ourHash))
                 	{
-                		System.out.println("Going");
+                		System.out.println("Integrity good. " + fileEvent.getSize() + " bytes received.");
+                		
+                    	byte[] buf = new byte[(int)fileEvent.getSize()];
+                    	buf = fileEvent.getnewData();
+
+                    	//System.out.println(fileEvent.getFilename());
+                    	//System.out.println(fileEvent.getSize());
+                    	String outputFile = fileEvent.getDestFolder() + fileEvent.getFilename();
+                    	File newFile = new File(outputFile);
+                    	
+                    	fileOutputStream = new FileOutputStream(newFile);
+                    	
+                    	fileOutputStream.write(fileEvent.getnewData(), 0 ,(int)fileEvent.getSize());
+                    	fileOutputStream.flush();
+                    	files.add(newFile);
+                		
                 	}
-                	for(int i = 0; i < 5; i++){
-                		System.out.print(fileEvent.getData()[i] + ";");
+                	else {
+                		System.out.println("Integrity bad.");
                 	}
-                	
-                	System.out.println(fileEvent.getFilename());
-                	System.out.println(fileEvent.getSize());
-                	String outputFile = fileEvent.getDestFolder() + fileEvent.getFilename();
-                	File newFile = new File(outputFile);
-                	
-                	fileOutputStream = new FileOutputStream(newFile);
-                	
-                	fileOutputStream.write(buf, 0 ,(int)fileEvent.getSize());
-                	fileOutputStream.flush();
-                	files.add(newFile);
-               
-            
+
     	}catch (IOException e) {
     		closeSocket();
-    		System.out.println("IOExceptionnn");
-        	System.out.println("file is saved");
+        	System.out.println("File transfer complete. Closing...");
         	System.exit(0);
     		
             //e.printStackTrace();
@@ -163,7 +120,7 @@ public class Server {
     {
     	try
     	{
-    		System.out.println("Attempting merge");
+    		System.out.println("Attempting merge...");
     		File file2 = new File("src/cs380/newmergedmp4.mp4");
     		mergeFiles(files, file2);
     		fileOutputStream.flush();
@@ -182,6 +139,7 @@ public class Server {
             for (File f : files) {
                 Files.copy(f.toPath(), mergingStream);
             }
+            System.out.println("Merge Complete.");
         }
     }
 
@@ -189,8 +147,6 @@ public class Server {
 
         Server server = new Server();
         server.makeConnect();
-        
-        //server.dLoad();
 
     }
 }

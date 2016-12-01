@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Client {
 
@@ -16,10 +17,15 @@ public class Client {
     private String source = "src/cs380/"; //change the source file path
     private FileEvent fileEvent = null;
     private String destination = "src/cs380/"; //change the destination path
+    private static sha hash;
+    private static XOR cipher;
+    private static Base64 b64;
     
 
     public Client() {
-
+    	hash = new sha();
+    	cipher = new XOR();
+    	b64 = new Base64();
     }
 
     /**
@@ -29,7 +35,7 @@ public class Client {
         while (!isConnected) {
             try {
             	
-                socket = new Socket("localHost", 4449);
+                socket = new Socket("localHost", 4456);
                 //inputStream = new ObjectInputStream(socket.getInputStream());
 
                 os = new ObjectOutputStream(socket.getOutputStream());
@@ -51,10 +57,20 @@ public class Client {
     
     public List<File> splitFile(File f) throws IOException {
     	List<File> files = new ArrayList<File>();
+    	long len = f.length();
+    	
+    	String key = "";
+    	Scanner s1 = new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/key.txt"));
+    	while(s1.hasNext())
+    	{
+    		key = s1.next();
+    	}
+    	
     	
         int partCounter = 1;//I like to name parts from 001, 002, 003, ...
                             //you can change it to 0 if you want 000, 001, ...
 
+        long count = 1;
         int sizeOfFiles = 1024 * 1024;// 1MB
         byte[] buffer = new byte[sizeOfFiles];
 
@@ -70,21 +86,22 @@ public class Client {
                 //        + String.format("%03d", partCounter++));
                 //files.add(newFile);
             	
-            	System.out.println(tmp);
-            
-            	fileEvent = new FileEvent(buffer);
-                //fileEvent.setData(buffer); 
-            	//fileEvent.fileData = buffer;
-                for(int i = 0; i < 5; i++){
-            		System.out.print(buffer[i] + "=");
-            	}
+            	System.out.println("Sending: " + tmp + "bytes.");
+            	
+            	fileEvent = new FileEvent(count);
+            	fileEvent.setnewData(buffer);
+
+                fileEvent.setHash(XOR.xorMessage(hash.perform(buffer), key));
+                
+                
                 fileEvent.setSize(tmp);
                 fileEvent.setFilename(name + "."
                         + String.format("%03d", partCounter++));
-                System.out.println(fileEvent.getFilename());
+                //System.out.println(fileEvent.getFilename());
                 
                 fileEvent.setDestFolder(destination);
                 os.writeObject(fileEvent);
+                count++;
                 
                 try {
                     Thread.sleep(500);
@@ -108,13 +125,39 @@ public class Client {
         return files;
     }
     
+    
+    public static void run() throws IOException {
+        Scanner s1,s2;
+        s1=new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/user.txt")); //change filepath to get user.txt
+        s2=new Scanner(System.in);
+        boolean flag=false;
+        String name,pword,n,p;
+        System.out.println("Enter name:");
+        n=s2.next();
+        System.out.println("Enter password:");
+        p=s2.next();
+        while(s1.hasNext()) {
+            name=s1.next();
+            pword=s1.next();
+            if(n.equals(name) && p.equals(pword)) {
+                System.out.println("You are logged in."); //we can execute our code here
+                Client c = new Client();
+                c.connections();
+                flag=true;
+                break;
+            }
+        }
+        if (!flag)
+        {
+            System.out.println("Incorrect user and/or password.");
+            run();
+        }
+    }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        Client c = new Client();
-        c.connections();
-        //c.send();
+        run();
 
     }
 

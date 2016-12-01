@@ -8,14 +8,12 @@ import java.io.Serializable;
 
 public class FileEvent implements Serializable {
 
-    public FileEvent(byte[] arr) {
-    	fileData = arr;
-    	for(int i = 0; i < 5; i++){
-    		System.out.print(fileData[i] + "[]");
-    	}
+    public FileEvent(long in) {
+    	serialVersionUID = in;
+    	System.out.println(serialVersionUID);
     }
 
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID;
 
     private String destinationDirectory;
     private String sourceDirectory;
@@ -23,7 +21,27 @@ public class FileEvent implements Serializable {
     private long fileSize;
     public byte[] fileData;
     private String status;
+    private String hash;
+    private byte[] newData;
+    
+    public byte[] getnewData()
+    {
+    	return newData;
+    }
+    
+    public void setnewData(byte[] in){
+    	this.newData = in;
+    }
 
+    public String getHash()
+    {
+    	return hash;
+    }
+    
+    public void setHash(String in){
+    	this.hash = in;
+    }
+    
     public String getDestFolder() {
 
         return destinationDirectory;

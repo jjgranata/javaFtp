@@ -14,8 +14,8 @@ public class sha {
     int[] H = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
     int F;
  
-    public sha(String in) {
-    	hash = perform(in);
+    public sha() {
+    	
     }
  
     public class Digest {
@@ -95,7 +95,7 @@ public class sha {
                 F = (B & C) | ((~B) & D);
 
                 temp = rotateLeft(A, 5) + F + E + K[0] + W[j];
-                System.out.println(Integer.toHexString(K[0]));
+                //System.out.println(Integer.toHexString(K[0]));
                 E = D;
                 D = C;
                 C = rotateLeft(B, 30);
@@ -107,7 +107,7 @@ public class sha {
                 F = B ^ C ^ D;
 
                 temp = rotateLeft(A, 5) + F + E + K[1] + W[j];
-                System.out.println(Integer.toHexString(K[1]));
+                //System.out.println(Integer.toHexString(K[1]));
                 E = D;
                 D = C;
                 C = rotateLeft(B, 30);
@@ -145,14 +145,10 @@ public class sha {
  
             int n;
             for (n = 0; n < 16; n++) {
-                System.out.println("W[" + n + "] = " + toHexString(W[n]));
+                //System.out.println("W[" + n + "] = " + toHexString(W[n]));
             }
  
-            System.out.println("H0:" + Integer.toHexString(H[0]));
-            System.out.println("H0:" + Integer.toHexString(H[1]));
-            System.out.println("H0:" + Integer.toHexString(H[2]));
-            System.out.println("H0:" + Integer.toHexString(H[3]));
-            System.out.println("H0:" + Integer.toHexString(H[4]));
+   
         }
  
         final int rotateLeft(int value, int bits) {
@@ -216,14 +212,14 @@ public class sha {
         return ZEROS.substring(s.length()) + s;
     }
  
-    public String perform(String in) {
+    public String perform(byte[] in) {
         Digest digester = new Digest();
         //    try {
-                String z = in;
-                System.out.println("Message: " + z);
-                byte[] dataBuffer = (z).getBytes();
+               /* String z = in;
+                System.out.println("Message: " + z);*/
+                byte[] dataBuffer = in;
                 String thedigest = digester.digestIt(dataBuffer);
-                System.out.println("Output: " + thedigest);
+                //System.out.println("Output: " + thedigest);
                 return thedigest;
          //   } catch (Exception ex) {
          //   }
