@@ -35,7 +35,7 @@ public class Client {
         while (!isConnected) {
             try {
             	
-                socket = new Socket("localHost", 4456);
+                socket = new Socket("localHost", 4222);
                 //inputStream = new ObjectInputStream(socket.getInputStream());
 
                 os = new ObjectOutputStream(socket.getOutputStream());
@@ -71,7 +71,7 @@ public class Client {
                             //you can change it to 0 if you want 000, 001, ...
 
         long count = 1;
-        int sizeOfFiles = 1024 * 1024;// 1MB
+        int sizeOfFiles = 1024 * 64;// 
         byte[] buffer = new byte[sizeOfFiles];
 
         try (BufferedInputStream bis = new BufferedInputStream(
@@ -80,7 +80,7 @@ public class Client {
             
             
             int tmp = 0;
-            while ((tmp = bis.read(buffer)) > 0) {
+            while ((tmp = bis.read(buffer)) != -1) {
                 //write each chunk of data into separate file with different number in name
                 //File newFile = new File(f.getParent(), name + "."
                 //        + String.format("%03d", partCounter++));
@@ -90,6 +90,7 @@ public class Client {
             	
             	fileEvent = new FileEvent(count);
             	fileEvent.setnewData(buffer);
+            	//fileEvent.setsmallbyte(buffer[0]);
 
                 fileEvent.setHash(XOR.xorMessage(hash.perform(buffer), key));
                 

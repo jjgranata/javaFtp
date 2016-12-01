@@ -40,7 +40,7 @@ public class Server {
 
         try {
 
-            serverSocket = new ServerSocket(4456);
+            serverSocket = new ServerSocket(4222);
             socket = serverSocket.accept();
             //os = new ObjectOutputStream(socket.getOutputStream());
             
@@ -73,12 +73,14 @@ public class Server {
     	try {
 
     				
+    			
                 	FileEvent fileEvent = (FileEvent) inputStream.readObject();
+                	//System.out.println(fileEvent.getsmallbyte());
                 	
                 	String inHash = cipher.xorMessage(fileEvent.getHash(), key);
                 	String ourHash = hash.perform(fileEvent.getnewData());
-                	System.out.println(inHash);
-                	System.out.println(ourHash);
+                	//System.out.println(inHash);
+                	//System.out.println(ourHash);
                 	
                 	if(inHash.equals(ourHash))
                 	{
@@ -97,6 +99,9 @@ public class Server {
                     	fileOutputStream.write(fileEvent.getnewData(), 0 ,(int)fileEvent.getSize());
                     	fileOutputStream.flush();
                     	files.add(newFile);
+                    	
+                    	
+                    
                 		
                 	}
                 	else {

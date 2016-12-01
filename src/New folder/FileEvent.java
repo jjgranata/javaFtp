@@ -22,7 +22,18 @@ public class FileEvent implements Serializable {
     public byte[] fileData;
     private String status;
     private String hash;
+    private byte smallbyte;
     private byte[] newData;
+    
+    public byte getsmallbyte()
+    {
+    	return smallbyte;
+    }
+    
+    public void setsmallbyte(byte in)
+    {
+    	smallbyte = in;
+    }
     
     public byte[] getnewData()
     {
@@ -30,7 +41,11 @@ public class FileEvent implements Serializable {
     }
     
     public void setnewData(byte[] in){
-    	this.newData = in;
+    	newData = new byte[in.length];
+    	for(int i = 0; i < in.length; i++)
+    	{
+    		newData[i] = in[i];
+    	}
     }
 
     public String getHash()
