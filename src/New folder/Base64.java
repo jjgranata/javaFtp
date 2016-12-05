@@ -1,7 +1,28 @@
 package cs380;
 
+import java.util.Scanner;
 
 public class Base64 {
+	public Base64() {
+	}
+	public static boolean promptUser() {
+		Scanner kb = new Scanner(System.in);
+		char userAnswer = 'a';
+	
+		while( (userAnswer != 'y') && (userAnswer != 'n') ) {
+			System.out.println("Would you like to Ascii armor with MIME Base64 encoding before sending? (y/n):");
+			userAnswer = kb.next().charAt(0);
+			System.out.println(userAnswer);
+		}
+		if(userAnswer == 'y') {
+			kb.close();
+			return true;
+		}
+		else {
+			kb.close();
+			return false;
+		}
+	}
 
 	public static String encode(byte[] data) {
 		char[] tbl = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
@@ -77,7 +98,7 @@ public class Base64 {
 
 		dataIndex = (numberQuadruple - 1) * 4;
 		encodedIndex = (numberQuadruple - 1) * 3;
-		// first last bits.
+
 		b1 = base64Alphabet[base64Data[dataIndex++]];
 		b2 = base64Alphabet[base64Data[dataIndex++]];
 		if ((b1 == -1) || (b2 == -1)) {
@@ -88,13 +109,13 @@ public class Base64 {
 		b3 = base64Alphabet[d3 = base64Data[dataIndex++]];
 		b4 = base64Alphabet[d4 = base64Data[dataIndex++]];
 		if ((b3 == -1) || (b4 == -1)) {
-			// Check if they are PAD characters
-			if (isPad(d3) && isPad(d4)) { // Two PAD e.g. 3c[Pad][Pad]
+			// Check if they are pad characters
+			if (isPad(d3) && isPad(d4)) { // Two pad
 				if ((b2 & 0xf) != 0)// last 4 bits should be zero
 					throw new RuntimeException("decoding.general");
 				decodedData = new byte[encodedIndex + 1];
 				decodedData[encodedIndex] = (byte) (b1 << 2 | b2 >> 4);
-			} else if (!isPad(d3) && isPad(d4)) { // One PAD e.g. 3cQ[Pad]
+			} else if (!isPad(d3) && isPad(d4)) { // One pad
 				if ((b3 & 0x3) != 0)// last 2 bits should be zero
 					throw new RuntimeException("decoding.general");
 				decodedData = new byte[encodedIndex + 2];
@@ -104,7 +125,7 @@ public class Base64 {
 				throw new RuntimeException("decoding.general");
 			}
 		} else {
-			// No PAD e.g 3cQl
+			// No padding
 			decodedData = new byte[encodedIndex + 3];
 			decodedData[encodedIndex++] = (byte) (b1 << 2 | b2 >> 4);
 			decodedData[encodedIndex++] = (byte) (((b2 & 0xf) << 4) | ((b3 >> 2) & 0xf));
@@ -112,7 +133,7 @@ public class Base64 {
 		}
 		encodedIndex = 0;
 		dataIndex = 0;
-		// the begin
+		// the beginning
 		for (i = numberQuadruple - 1; i > 0; i--) {
 			b1 = base64Alphabet[base64Data[dataIndex++]];
 			b2 = base64Alphabet[base64Data[dataIndex++]];
@@ -134,7 +155,7 @@ public class Base64 {
 		if (data == null)
 			return 0;
 
-		// count characters that's not whitespace
+		// count characters that are not whitespace
 		int newSize = 0;
 		int len = data.length;
 		for (int i = 0; i < len; i++) {
@@ -153,8 +174,14 @@ public class Base64 {
 		return (octect == 0x20 || octect == 0xd || octect == 0xa || octect == 0x9);
 	}
 
-
 	public static void main(String[] args) {
+		promptUser();
+		byte[] a = { 1, 1, 1, 1, 1, 1, 1 };
+		System.out.println(encode(a));
+		byte[] b = decode(encode(a));
 
+		for (int i = 0; i < b.length; i++) {
+			System.out.println(b[i]);
+		}
 	}
 }

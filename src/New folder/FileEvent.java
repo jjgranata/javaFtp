@@ -24,6 +24,7 @@ public class FileEvent implements Serializable {
     private String hash;
     private byte smallbyte;
     private byte[] newData;
+    private String asciiArmorString;
     
     public byte getsmallbyte()
     {
@@ -58,7 +59,6 @@ public class FileEvent implements Serializable {
     }
     
     public String getDestFolder() {
-
         return destinationDirectory;
     }
 
@@ -68,48 +68,38 @@ public class FileEvent implements Serializable {
 
     public String getSrcFolder()
     {
-        return sourceDirectory;
+    	return sourceDirectory;
     }
 
     public void setSrcFolder(String srcFolder) {
-
         this.sourceDirectory = srcFolder;
     }
 
     public String getFilename() {
-
         return filename;
     }
 
     public void setFilename(String name) {
-
         this.filename = name;
     }
 
     public long getSize()
-    {
-        return fileSize;
+    {        return fileSize;
     }
 
     public void setSize(long size) {
-
         this.fileSize = size;
     }
 
     public String getState() {
-
         return status;
     }
 
     public void setState(String state) {
-
         this.status = state;
     }
 
     public byte[] getData() {
-
-    
-
         return fileData;
     }
 
@@ -119,4 +109,13 @@ public class FileEvent implements Serializable {
         this.fileData = data;
 
     }
+
+	public String getAsciiArmorString() {
+		return asciiArmorString;
+	}
+
+	public void setAsciiArmorString(String asciiArmorString) {
+		this.asciiArmorString = asciiArmorString;
+	}
+
 }

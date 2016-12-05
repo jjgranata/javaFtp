@@ -58,6 +58,7 @@ public class Client {
     public List<File> splitFile(File f) throws IOException {
     	List<File> files = new ArrayList<File>();
     	long len = f.length();
+    	boolean doBase64 = false;
     	
     	String key = "";
     	Scanner s1 = new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/key.txt"));
@@ -71,7 +72,7 @@ public class Client {
                             //you can change it to 0 if you want 000, 001, ...
 
         long count = 1;
-        int sizeOfFiles = 1024 * 64;// 
+        int sizeOfFiles = 1024 * 64;
         byte[] buffer = new byte[sizeOfFiles];
 
         try (BufferedInputStream bis = new BufferedInputStream(
@@ -92,9 +93,15 @@ public class Client {
             	fileEvent.setnewData(buffer);
             	//fileEvent.setsmallbyte(buffer[0]);
 
+//luis start
+                doBase64 = b64.promptUser();
+                // do ascii armoring with base64
+                if(doBase64) {
+                	fileEvent.setAsciiArmorString(b64.encode(buffer));
+                }
+      
+//luis end               
                 fileEvent.setHash(XOR.xorMessage(hash.perform(buffer), key));
-                
-                
                 fileEvent.setSize(tmp);
                 fileEvent.setFilename(name + "."
                         + String.format("%03d", partCounter++));

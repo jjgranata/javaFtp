@@ -71,16 +71,15 @@ public class Server {
     public void handle(String key)
     {
     	try {
-
-    				
-    			
                 	FileEvent fileEvent = (FileEvent) inputStream.readObject();
+                	Base64 b64 = new Base64();
                 	//System.out.println(fileEvent.getsmallbyte());
+                	
+                	// the data converted from the file event just received
+                	byte[] inData = b64.decode(fileEvent.getAsciiArmorString());
                 	
                 	String inHash = cipher.xorMessage(fileEvent.getHash(), key);
                 	String ourHash = hash.perform(fileEvent.getnewData());
-                	//System.out.println(inHash);
-                	//System.out.println(ourHash);
                 	
                 	if(inHash.equals(ourHash))
                 	{
@@ -99,10 +98,7 @@ public class Server {
                     	fileOutputStream.write(fileEvent.getnewData(), 0 ,(int)fileEvent.getSize());
                     	fileOutputStream.flush();
                     	files.add(newFile);
-                    	
-                    	
-                    
-                		
+
                 	}
                 	else {
                 		System.out.println("Integrity bad.");
