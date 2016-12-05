@@ -12,7 +12,6 @@ public class Base64 {
 		while( (userAnswer != 'y') && (userAnswer != 'n') ) {
 			System.out.println("Would you like to Ascii armor with MIME Base64 encoding before sending? (y/n):");
 			userAnswer = kb.next().charAt(0);
-			System.out.println(userAnswer);
 		}
 		if(userAnswer == 'y') {
 			kb.close();
@@ -175,13 +174,13 @@ public class Base64 {
 	}
 
 	public static void main(String[] args) {
-		promptUser();
-		byte[] a = { 1, 1, 1, 1, 1, 1, 1 };
-		System.out.println(encode(a));
-		byte[] b = decode(encode(a));
-
-		for (int i = 0; i < b.length; i++) {
-			System.out.println(b[i]);
-		}
+//		promptUser();
+//		byte[] a = { 1, 1, 1, 1, 1, 1, 1 };
+//		System.out.println(encode(a));
+//		byte[] b = decode(encode(a));
+//
+//		for (int i = 0; i < b.length; i++) {
+//			System.out.println(b[i]);
+//		}
 	}
 }

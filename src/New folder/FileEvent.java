@@ -24,7 +24,7 @@ public class FileEvent implements Serializable {
     private String hash;
     private byte smallbyte;
     private byte[] newData;
-    private String asciiArmorString;
+    private String asciiArmorString = "";
     
     public byte getsmallbyte()
     {

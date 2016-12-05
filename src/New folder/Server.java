@@ -124,7 +124,8 @@ public class Server {
     	try
     	{
     		System.out.println("Attempting merge...");
-    		File file2 = new File("src/cs380/newmergedmp4.mp4");
+    		//File file2 = new File("src/cs380/newmergedmp4.mp4");
+    		File file2 = new File("C:/Windows.old.000/Users/Luis/Desktop/Programs/cs380/src/cs380/newmergedmp4.mp4");    		
     		mergeFiles(files, file2);
     		fileOutputStream.flush();
         	fileOutputStream.close();
