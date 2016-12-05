@@ -61,7 +61,8 @@ public class Client {
     	boolean doBase64 = false;
     	
     	String key = "";
-    	Scanner s1 = new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/key.txt"));
+    	//Scanner s1 = new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/key.txt"));
+    	Scanner s1 = new Scanner(new FileInputStream("C:/Windows.old.000/Users/Luis/Desktop/Programs/cs380/src/cs380/key.txt"));
     	while(s1.hasNext())
     	{
     		key = s1.next();
@@ -86,21 +87,20 @@ public class Client {
                 //File newFile = new File(f.getParent(), name + "."
                 //        + String.format("%03d", partCounter++));
                 //files.add(newFile);
+//luis start
+                doBase64 = b64.promptUser();
+                // do ascii armoring with base64
+                if(doBase64)
+                	fileEvent.setAsciiArmorString(b64.encode(buffer));
+//luis end       
             	
             	System.out.println("Sending: " + tmp + "bytes.");
             	
             	fileEvent = new FileEvent(count);
             	fileEvent.setnewData(buffer);
             	//fileEvent.setsmallbyte(buffer[0]);
-
-//luis start
-                doBase64 = b64.promptUser();
-                // do ascii armoring with base64
-                if(doBase64) {
-                	fileEvent.setAsciiArmorString(b64.encode(buffer));
-                }
-      
-//luis end               
+            	System.out.println("hereclient onesl");
+        
                 fileEvent.setHash(XOR.xorMessage(hash.perform(buffer), key));
                 fileEvent.setSize(tmp);
                 fileEvent.setFilename(name + "."
@@ -136,7 +136,9 @@ public class Client {
     
     public static void run() throws IOException {
         Scanner s1,s2;
-        s1=new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/user.txt")); //change filepath to get user.txt
+        //s1=new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/user.txt")); //change filepath to get user.txt
+        s1=new Scanner(new FileInputStream("C:/Windows.old.000/Users/Luis/Desktop/Programs/cs380/src/cs380/user.txt"));
+        
         s2=new Scanner(System.in);
         boolean flag=false;
         String name,pword,n,p;

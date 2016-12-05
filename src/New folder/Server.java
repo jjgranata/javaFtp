@@ -47,7 +47,9 @@ public class Server {
             inputStream = new ObjectInputStream(socket.getInputStream());
 
             String key = "";
-        	Scanner s1 = new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/key.txt"));
+        	//Scanner s1 = new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/key.txt"));
+            Scanner s1 = new Scanner(new FileInputStream("C:/Windows.old.000/Users/Luis/Desktop/Programs/cs380/src/cs380/key.txt"));
+        	
         	while(s1.hasNext())
         	{
         		key = s1.next();
