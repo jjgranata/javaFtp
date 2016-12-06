@@ -40,15 +40,14 @@ public class Server {
 
         try {
 
-            serverSocket = new ServerSocket(4222);
+            serverSocket = new ServerSocket(4223);
             socket = serverSocket.accept();
             //os = new ObjectOutputStream(socket.getOutputStream());
             
             inputStream = new ObjectInputStream(socket.getInputStream());
 
             String key = "";
-        	//Scanner s1 = new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/key.txt"));
-            Scanner s1 = new Scanner(new FileInputStream("C:/Windows.old.000/Users/Luis/Desktop/Programs/cs380/src/cs380/key.txt"));
+            Scanner s1 = new Scanner(new FileInputStream("/Users/oscarhernandez/Documents/workspace/javaFtp2/src/cs380/key.txt"));
         	
         	while(s1.hasNext())
         	{
@@ -125,7 +124,7 @@ public class Server {
     	{
     		System.out.println("Attempting merge...");
     		//File file2 = new File("src/cs380/newmergedmp4.mp4");
-    		File file2 = new File("C:/Windows.old.000/Users/Luis/Desktop/Programs/cs380/src/cs380/newmergedmp4.mp4");    		
+    		File file2 = new File("/Users/oscarhernandez/Documents/workspace/javaFtp/src/cs380/newmergedmp4.mp4");    		
     		mergeFiles(files, file2);
     		fileOutputStream.flush();
         	fileOutputStream.close();

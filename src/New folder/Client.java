@@ -20,6 +20,7 @@ public class Client {
     private static sha hash;
     private static XOR cipher;
     private static Base64 b64;
+    private static boolean armor;
     
 
     public Client() {
@@ -62,7 +63,7 @@ public class Client {
     	
     	String key = "";
     	//Scanner s1 = new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/key.txt"));
-    	Scanner s1 = new Scanner(new FileInputStream("C:/Windows.old.000/Users/Luis/Desktop/Programs/cs380/src/cs380/key.txt"));
+    	Scanner s1 = new Scanner(new FileInputStream("/Users/oscarhernandez/Documents/workspace/javaFtp/src/cs380/key.txt"));
     	while(s1.hasNext())
     	{
     		key = s1.next();
@@ -73,7 +74,7 @@ public class Client {
                             //you can change it to 0 if you want 000, 001, ...
 
         long count = 1;
-        int sizeOfFiles = 1024 * 64;
+        int sizeOfFiles = 1024 * 1024;
         byte[] buffer = new byte[sizeOfFiles];
 
         try (BufferedInputStream bis = new BufferedInputStream(
@@ -88,15 +89,17 @@ public class Client {
                 //        + String.format("%03d", partCounter++));
                 //files.add(newFile);
 //luis start
-                doBase64 = b64.promptUser();
-                // do ascii armoring with base64
-                if(doBase64)
-                	fileEvent.setAsciiArmorString(b64.encode(buffer));
+//                doBase64 = b64.promptUser();
+//                // do ascii armoring with base64
+//                if(doBase64)
+//                	fileEvent.setAsciiArmorString(b64.encode(buffer));
 //luis end       
             	
             	System.out.println("Sending: " + tmp + "bytes.");
             	
             	fileEvent = new FileEvent(count);
+            	if(armor)
+                	fileEvent.setAsciiArmorString(b64.encode(buffer));
             	fileEvent.setnewData(buffer);
             	//fileEvent.setsmallbyte(buffer[0]);
             	System.out.println("hereclient onesl");
@@ -137,7 +140,7 @@ public class Client {
     public static void run() throws IOException {
         Scanner s1,s2;
         //s1=new Scanner(new FileInputStream("C:/Users/Zach/workspace/cs380/src/cs380/user.txt")); //change filepath to get user.txt
-        s1=new Scanner(new FileInputStream("C:/Windows.old.000/Users/Luis/Desktop/Programs/cs380/src/cs380/user.txt"));
+        s1=new Scanner(new FileInputStream("/Users/oscarhernandez/Desktop/workspace/javaFtp/src/cs380/user.txt"));
         
         s2=new Scanner(System.in);
         boolean flag=false;
@@ -152,6 +155,7 @@ public class Client {
             if(n.equals(name) && p.equals(pword)) {
                 System.out.println("You are logged in."); //we can execute our code here
                 Client c = new Client();
+                armor = b64.promptUser();
                 c.connections();
                 flag=true;
                 break;
